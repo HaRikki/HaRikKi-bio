@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Premium personal profile & link-in-bio — Digital Creator • Gamer • Developer" />
+  <meta name="keywords" content="profile, bio, link in bio, portfolio, creator, gamer, developer" />
+  <meta name="author" content="HaRikKi" />
+  <link rel="canonical" href="/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="@HaRikKi — Premium Profile" />
+  <meta property="og:description" content="Digital Creator • Gamer • Developer. Building premium digital experiences." />
+  <meta property="og:image" content="/assets/images/og-default.png" />
+  <meta property="og:url" content="/" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="@HaRikKi — Premium Profile" />
+  <meta name="twitter:description" content="Digital Creator • Gamer • Developer. Building premium digital experiences." />
+  <meta name="twitter:image" content="/assets/images/og-default.png" />
+
+  <title>@HaRikKi — Premium Profile</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23c9a227'/%3E%3Ctext x='50' y='62' text-anchor='middle' font-size='40' fill='%23000'%3EH%3C/text%3E%3C/svg%3E" />
+
+  <!-- Lucide Icons (lightweight) -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Background Video Layer -->
+  <div id="video-bg" class="video-bg" aria-hidden="true">
+    <video id="bg-video" class="bg-video" playsinline muted loop preload="metadata"></video>
+    <div class="video-overlay"></div>
+  </div>
+
+  <!-- Hidden audio for background music (Media Session friendly) -->
+  <audio id="bg-music" preload="metadata" loop playsinline></audio>
+
+  <!-- Public Profile — Book / Paper UI -->
+  <main id="public-profile" class="public-profile">
+    <div class="book-stage">
+      <div class="book-shadow"></div>
+      <div class="book-page" id="book-page">
+        <div class="page-edge page-edge-left"></div>
+        <div class="page-lines" aria-hidden="true"></div>
+        <div class="profile-container">
+          <!-- Soul Rings + Avatar -->
+          <div class="avatar-wrap" id="avatar-wrap">
+            <div class="soul-rings" id="soul-rings" aria-hidden="true"></div>
+            <button type="button" class="avatar-btn" id="avatar-btn" aria-label="Profile image">
+              <img id="profile-image" class="profile-image" src="" alt="Profile" width="140" height="140" />
+              <div class="avatar-glow"></div>
+            </button>
+          </div>
+
+          <!-- Username + Badge -->
+          <div class="username-row">
+            <h1 id="username" class="username">@HaRikKi</h1>
+            <span id="premium-badge" class="premium-badge" aria-label="Premium">
+              <span class="badge-icon">💎</span>
+              <span class="badge-text">Premium</span>
+            </span>
+          </div>
+
+          <!-- Description -->
+          <p id="description" class="description">
+            Digital Creator • Gamer • Developer<br />
+            Building premium digital experiences.
+          </p>
+
+          <!-- Link Buttons -->
+          <nav id="link-buttons" class="link-buttons" aria-label="Links"></nav>
+
+          <!-- Bottom controls -->
+          <div class="bottom-controls">
+            <button type="button" id="share-btn" class="ctrl-btn" aria-label="Share profile" title="Share">
+              <i data-lucide="share-2"></i>
+            </button>
+            <button type="button" id="music-btn" class="ctrl-btn" aria-label="Play or pause music" title="Music">
+              <i data-lucide="music" id="music-icon"></i>
+            </button>
+            <button type="button" id="mute-btn" class="ctrl-btn" aria-label="Toggle video sound" title="Video sound">
+              <i data-lucide="volume-x" id="mute-icon"></i>
+            </button>
+            <button type="button" id="play-pause-btn" class="ctrl-btn" aria-label="Play or pause video" title="Play/Pause video">
+              <i data-lucide="pause" id="play-icon"></i>
+            </button>
+          </div>
+
+          <!-- Video navigation (multi video) -->
+          <div id="video-nav" class="video-nav" hidden>
+            <button type="button" id="prev-video" class="video-nav-btn" aria-label="Previous video">
+              <i data-lucide="chevron-left"></i>
+            </button>
+            <span id="video-indicator" class="video-indicator">1 / 1</span>
+            <button type="button" id="next-video" class="video-nav-btn" aria-label="Next video">
+              <i data-lucide="chevron-right"></i>
+            </button>
+          </div>
+        </div>
+        <div class="page-corner"></div>
+      </div>
+    </div>
+
+    <footer id="site-footer" class="site-footer">
+      <span id="copyright-text">© 2026 HaRikKi</span>
+    </footer>
+  </main>
+
+  <!-- Password Popup (minimal) -->
+  <div id="pass-popup" class="pass-popup" hidden role="dialog" aria-modal="true">
+    <div class="pass-popup-inner">
+      <input type="password" id="pass-input" class="pass-input" autocomplete="off" inputmode="text" aria-label="Password" />
+      <button type="button" id="pass-done" class="pass-done">Done</button>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <!-- Admin Dashboard -->
+  <div id="admin-dashboard" class="admin-dashboard" hidden>
+    <aside class="admin-sidebar" id="admin-sidebar">
+      <div class="sidebar-header">
+        <span class="sidebar-logo">👑</span>
+        <span class="sidebar-title">Admin</span>
+        <button type="button" id="sidebar-close" class="sidebar-close" aria-label="Close menu">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <nav class="sidebar-nav" id="sidebar-nav">
+        <button type="button" class="nav-item active" data-section="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</button>
+        <button type="button" class="nav-item" data-section="profile"><i data-lucide="user"></i> Profile</button>
+        <button type="button" class="nav-item" data-section="username"><i data-lucide="type"></i> Username</button>
+        <button type="button" class="nav-item" data-section="description"><i data-lucide="align-left"></i> Description</button>
+        <button type="button" class="nav-item" data-section="soulrings"><i data-lucide="circle"></i> Soul Rings</button>
+        <button type="button" class="nav-item" data-section="videos"><i data-lucide="video"></i> Videos</button>
+        <button type="button" class="nav-item" data-section="music"><i data-lucide="music"></i> Music</button>
+        <button type="button" class="nav-item" data-section="buttons"><i data-lucide="link"></i> Buttons</button>
+        <button type="button" class="nav-item" data-section="appearance"><i data-lucide="palette"></i> Appearance</button>
+        <button type="button" class="nav-item" data-section="animations"><i data-lucide="sparkles"></i> Animations</button>
+        <button type="button" class="nav-item" data-section="settings"><i data-lucide="settings"></i> Website Settings</button>
+        <button type="button" class="nav-item" data-section="security"><i data-lucide="lock"></i> Security</button>
+        <button type="button" class="nav-item" data-section="backup"><i data-lucide="database"></i> Backup</button>
+        <button type="button" class="nav-item logout-item" data-section="logout"><i data-lucide="log-out"></i> Logout</button>
+      </nav>
+    </aside>
+
+    <div class="admin-main">
+      <header class="admin-topbar">
+        <button type="button" id="menu-toggle" class="menu-toggle" aria-label="Open menu">
+          <i data-lucide="menu"></i>
+        </button>
+        <h2 id="section-title">Dashboard</h2>
+        <button type="button" id="preview-toggle" class="preview-toggle" aria-label="Toggle live preview">
+          <i data-lucide="eye"></i> Preview
+        </button>
+      </header>
+
+      <div class="admin-content-wrap">
+        <div class="admin-panels" id="admin-panels">
+          <!-- Dashboard Home -->
+          <section class="admin-section active" id="sec-dashboard">
+            <div class="stat-grid">
+              <div class="stat-card">
+                <span class="stat-icon">👁️</span>
+                <span class="stat-value" id="stat-views">0</span>
+                <span class="stat-label">Page Views</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-icon">🔗</span>
+                <span class="stat-value" id="stat-clicks">0</span>
+                <span class="stat-label">Link Clicks</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-icon">🎥</span>
+                <span class="stat-value" id="stat-videos">0</span>
+                <span class="stat-label">Videos</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-icon">🔗</span>
+                <span class="stat-value" id="stat-links">0</span>
+                <span class="stat-label">Active Links</span>
+              </div>
+            </div>
+            <div class="card">
+              <h3>Recent Changes</h3>
+              <ul id="recent-changes" class="recent-list">
+                <li>Welcome to Admin Dashboard</li>
+              </ul>
+              <p class="note">Statistics are stored locally in this browser only.</p>
+            </div>
+          </section>
+
+          <!-- Profile -->
+          <section class="admin-section" id="sec-profile">
+            <div class="card">
+              <h3>Profile Image</h3>
+              <div class="profile-upload-area">
+                <img id="admin-profile-preview" class="admin-avatar-preview" src="" alt="Preview" />
+                <div class="upload-actions">
+                  <label class="btn primary">
+                    <i data-lucide="upload"></i> Upload Image
+                    <input type="file" id="profile-image-input" accept="image/*" hidden />
+                  </label>
+                  <button type="button" id="remove-profile-image" class="btn ghost">Remove</button>
+                </div>
+              </div>
+              <p class="note">Upload from mobile or computer. Preview updates instantly.</p>
+            </div>
+            <div class="card">
+              <h3>Premium Badge</h3>
+              <label class="switch-row">
+                <span>Show Premium Badge</span>
+                <input type="checkbox" id="badge-enabled" checked />
+              </label>
+            </div>
+          </section>
+
+          <!-- Username -->
+          <section class="admin-section" id="sec-username">
+            <div class="card">
+              <h3>Username</h3>
+              <label class="field">
+                <span>Text</span>
+                <input type="text" id="cfg-username" value="@HaRikKi" maxlength="40" />
+              </label>
+              <label class="field">
+                <span>Font Size (px)</span>
+                <input type="range" id="cfg-username-size" min="18" max="48" value="28" />
+                <span class="range-val" id="cfg-username-size-val">28</span>
+              </label>
+              <label class="field">
+                <span>Font Weight</span>
+                <select id="cfg-username-weight">
+                  <option value="400">Regular</option>
+                  <option value="500">Medium</option>
+                  <option value="600">Semi Bold</option>
+                  <option value="700" selected>Bold</option>
+                  <option value="800">Extra Bold</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Letter Spacing (px)</span>
+                <input type="range" id="cfg-username-spacing" min="-2" max="8" step="0.5" value="1" />
+                <span class="range-val" id="cfg-username-spacing-val">1</span>
+              </label>
+              <label class="field">
+                <span>Color</span>
+                <input type="color" id="cfg-username-color" value="#ffffff" />
+              </label>
+              <label class="switch-row">
+                <span>Gradient Text</span>
+                <input type="checkbox" id="cfg-username-gradient" checked />
+              </label>
+              <label class="switch-row">
+                <span>Glow Effect</span>
+                <input type="checkbox" id="cfg-username-glow" checked />
+              </label>
+            </div>
+          </section>
+
+          <!-- Description -->
+          <section class="admin-section" id="sec-description">
+            <div class="card">
+              <h3>Description</h3>
+              <label class="field">
+                <span>Text (multi-line)</span>
+                <textarea id="cfg-description" rows="4">Digital Creator • Gamer • Developer
+Building premium digital experiences.</textarea>
+              </label>
+              <label class="field">
+                <span>Font Size (px)</span>
+                <input type="range" id="cfg-desc-size" min="12" max="22" value="15" />
+                <span class="range-val" id="cfg-desc-size-val">15</span>
+              </label>
+              <label class="field">
+                <span>Color</span>
+                <input type="color" id="cfg-desc-color" value="#c8c8d0" />
+              </label>
+              <label class="field">
+                <span>Alignment</span>
+                <select id="cfg-desc-align">
+                  <option value="center" selected>Center</option>
+                  <option value="left">Left</option>
+                  <option value="right">Right</option>
+                </select>
+              </label>
+            </div>
+          </section>
+
+          <!-- Soul Rings -->
+          <section class="admin-section" id="sec-soulrings">
+            <div class="card">
+              <h3>Soul Rings</h3>
+              <label class="switch-row">
+                <span>Enable Soul Rings</span>
+                <input type="checkbox" id="rings-enabled" checked />
+              </label>
+              <label class="field">
+                <span>Number of Rings (1–9)</span>
+                <input type="range" id="rings-count" min="1" max="9" value="3" />
+                <span class="range-val" id="rings-count-val">3</span>
+              </label>
+              <div id="rings-config" class="rings-config"></div>
+              <p class="note">Levels: White 10y • Yellow 100y • Purple 1k • Black 10k • Red 100k • Gold 1M+</p>
+            </div>
+          </section>
+
+          <!-- Videos -->
+          <section class="admin-section" id="sec-videos">
+            <div class="card">
+              <h3>Background Videos</h3>
+              <label class="btn primary full">
+                <i data-lucide="upload"></i> Upload Video
+                <input type="file" id="video-upload-input" accept="video/*" hidden />
+              </label>
+              <p class="note">Videos are stored in IndexedDB on this device. Large files may fail if storage is full.</p>
+              <ul id="video-list" class="video-list"></ul>
+            </div>
+          </section>
+
+          <!-- Music -->
+          <section class="admin-section" id="sec-music">
+            <div class="card">
+              <h3>Background Music</h3>
+              <label class="switch-row">
+                <span>Enable Music</span>
+                <input type="checkbox" id="music-enabled" checked />
+              </label>
+              <label class="btn primary full">
+                <i data-lucide="upload"></i> Upload Audio (MP3 / M4A / OGG)
+                <input type="file" id="music-upload-input" accept="audio/*" hidden />
+              </label>
+              <p id="music-file-info" class="note">No music file uploaded yet.</p>
+              <label class="field">
+                <span>Track Title (for lock screen / notification)</span>
+                <input type="text" id="music-title" placeholder="My Track" />
+              </label>
+              <label class="field">
+                <span>Artist</span>
+                <input type="text" id="music-artist" placeholder="Artist name" />
+              </label>
+              <label class="switch-row">
+                <span>Loop</span>
+                <input type="checkbox" id="music-loop" checked />
+              </label>
+              <label class="switch-row">
+                <span>Auto-play when visitor opens (muted browsers may block)</span>
+                <input type="checkbox" id="music-autoplay" />
+              </label>
+              <button type="button" id="music-remove" class="btn ghost full">Remove Music File</button>
+              <p class="note">
+                Uses Media Session API so playback can continue when the phone screen locks or the tab is in background (supported on modern mobile browsers). Leaving the site entirely or force-closing the browser will still stop audio — that is a browser/OS limit, not something a static page can fully bypass.
+              </p>
+            </div>
+          </section>
+
+          <!-- Buttons -->
+          <section class="admin-section" id="sec-buttons">
+            <div class="card">
+              <h3>Link Buttons</h3>
+              <button type="button" id="add-button" class="btn primary full"><i data-lucide="plus"></i> Add Button</button>
+              <ul id="button-list" class="button-list"></ul>
+            </div>
+          </section>
+
+          <!-- Appearance -->
+          <section class="admin-section" id="sec-appearance">
+            <div class="card">
+              <h3>Colors</h3>
+              <label class="field"><span>Primary</span><input type="color" id="cfg-primary" value="#c9a227" /></label>
+              <label class="field"><span>Accent</span><input type="color" id="cfg-accent" value="#7c5cff" /></label>
+              <label class="field"><span>Text</span><input type="color" id="cfg-text" value="#ffffff" /></label>
+              <label class="field"><span>Button BG</span><input type="color" id="cfg-btn-bg" value="#1a1a24" /></label>
+              <label class="field"><span>Glow</span><input type="color" id="cfg-glow" value="#c9a227" /></label>
+              <label class="field"><span>Border</span><input type="color" id="cfg-border" value="#ffffff" /></label>
+            </div>
+            <div class="card">
+              <h3>Typography</h3>
+              <label class="field">
+                <span>Username Font</span>
+                <select id="cfg-font-username">
+                  <option value="system-ui, sans-serif">System</option>
+                  <option value="'Inter', system-ui, sans-serif" selected>Inter</option>
+                  <option value="'Segoe UI', system-ui, sans-serif">Segoe UI</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="'Courier New', monospace">Monospace</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Description Font</span>
+                <select id="cfg-font-desc">
+                  <option value="system-ui, sans-serif">System</option>
+                  <option value="'Inter', system-ui, sans-serif" selected>Inter</option>
+                  <option value="'Segoe UI', system-ui, sans-serif">Segoe UI</option>
+                  <option value="Georgia, serif">Georgia</option>
+                </select>
+              </label>
+            </div>
+          </section>
+
+          <!-- Animations -->
+          <section class="admin-section" id="sec-animations">
+            <div class="card">
+              <h3>Effects</h3>
+              <label class="switch-row"><span>Fade In</span><input type="checkbox" id="anim-fade" checked /></label>
+              <label class="switch-row"><span>Slide Up</span><input type="checkbox" id="anim-slide" checked /></label>
+              <label class="switch-row"><span>Floating</span><input type="checkbox" id="anim-float" checked /></label>
+              <label class="switch-row"><span>Glow</span><input type="checkbox" id="anim-glow" checked /></label>
+              <label class="switch-row"><span>Hover Effects</span><input type="checkbox" id="anim-hover" checked /></label>
+              <label class="switch-row"><span>Click Feedback</span><input type="checkbox" id="anim-click" checked /></label>
+              <label class="switch-row"><span>Ring Rotation</span><input type="checkbox" id="anim-rotation" checked /></label>
+              <label class="switch-row"><span>Shine</span><input type="checkbox" id="anim-shine" checked /></label>
+              <label class="switch-row"><span>Reduced Motion</span><input type="checkbox" id="anim-reduced" /></label>
+            </div>
+          </section>
+
+          <!-- Website Settings -->
+          <section class="admin-section" id="sec-settings">
+            <div class="card">
+              <h3>General</h3>
+              <label class="field"><span>Website Title</span><input type="text" id="cfg-title" value="@HaRikKi — Premium Profile" /></label>
+              <label class="field"><span>Meta Description</span><textarea id="cfg-meta-desc" rows="2">Digital Creator • Gamer • Developer. Building premium digital experiences.</textarea></label>
+              <label class="field"><span>Copyright</span><input type="text" id="cfg-copyright" value="© 2026 HaRikKi" /></label>
+              <label class="switch-row"><span>Show Footer</span><input type="checkbox" id="cfg-footer" checked /></label>
+              <label class="switch-row"><span>Show Share Button</span><input type="checkbox" id="cfg-share" checked /></label>
+              <label class="switch-row"><span>Show Sound Button</span><input type="checkbox" id="cfg-sound" checked /></label>
+              <label class="switch-row"><span>Show Video Controls</span><input type="checkbox" id="cfg-vid-ctrl" checked /></label>
+            </div>
+          </section>
+
+          <!-- Security -->
+          <section class="admin-section" id="sec-security">
+            <div class="card">
+              <h3>Change Passcode</h3>
+              <label class="field"><span>Current Passcode</span><input type="password" id="sec-current" autocomplete="off" /></label>
+              <label class="field"><span>New Passcode</span><input type="password" id="sec-new" autocomplete="off" /></label>
+              <label class="field"><span>Confirm New</span><input type="password" id="sec-confirm" autocomplete="off" /></label>
+              <button type="button" id="change-passcode" class="btn primary">Update Passcode</button>
+              <p class="note">Client-side only. Not real server security. Do not reuse important passwords.</p>
+            </div>
+          </section>
+
+          <!-- Backup -->
+          <section class="admin-section" id="sec-backup">
+            <div class="card">
+              <h3>Backup & Restore</h3>
+              <button type="button" id="export-settings" class="btn primary full"><i data-lucide="download"></i> Export Settings (JSON)</button>
+              <label class="btn ghost full">
+                <i data-lucide="upload"></i> Import Settings
+                <input type="file" id="import-settings" accept="application/json,.json" hidden />
+              </label>
+              <button type="button" id="reset-settings" class="btn danger full"><i data-lucide="trash-2"></i> Reset All Settings</button>
+              <p class="note">Export does not include large video binaries. Videos remain in IndexedDB on this device.</p>
+            </div>
+          </section>
+        </div>
+
+        <!-- Live Preview Panel -->
+        <aside class="live-preview" id="live-preview">
+          <div class="preview-header">Live Preview</div>
+          <div class="preview-frame" id="preview-frame">
+            <div class="preview-avatar-wrap">
+              <div class="preview-rings" id="preview-rings"></div>
+              <img id="preview-img" class="preview-img" src="" alt="" />
+            </div>
+            <div class="preview-username" id="preview-username">@HaRikKi</div>
+            <div class="preview-badge" id="preview-badge">💎 Premium</div>
+            <div class="preview-desc" id="preview-desc">Digital Creator • Gamer • Developer</div>
+            <div class="preview-buttons" id="preview-buttons"></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <!-- Button Edit Modal -->
+  <div id="btn-modal" class="modal" hidden role="dialog" aria-modal="true">
+    <div class="modal-content">
+      <h3 id="btn-modal-title">Edit Button</h3>
+      <label class="field"><span>Title</span><input type="text" id="btn-title" maxlength="40" /></label>
+      <label class="field"><span>Description (optional)</span><input type="text" id="btn-desc" maxlength="80" placeholder="Short description under title" /></label>
+      <label class="field"><span>URL</span><input type="url" id="btn-url" placeholder="https://..." /></label>
+      <label class="field">
+        <span>Icon Type</span>
+        <select id="btn-icon-type">
+          <option value="brand">Brand / App Logo</option>
+          <option value="emoji">Emoji</option>
+          <option value="icon">Lucide Icon</option>
+        </select>
+      </label>
+      <label class="field" id="btn-brand-field">
+        <span>Brand Logo</span>
+        <select id="btn-brand">
+          <option value="telegram">Telegram</option>
+          <option value="facebook">Facebook</option>
+          <option value="instagram">Instagram</option>
+          <option value="youtube">YouTube</option>
+          <option value="tiktok">TikTok</option>
+          <option value="discord">Discord</option>
+          <option value="twitter">X / Twitter</option>
+          <option value="whatsapp">WhatsApp</option>
+          <option value="github">GitHub</option>
+          <option value="linkedin">LinkedIn</option>
+          <option value="spotify">Spotify</option>
+          <option value="twitch">Twitch</option>
+          <option value="website">Website / Globe</option>
+          <option value="store">Store</option>
+          <option value="mail">Email</option>
+          <option value="phone">Phone</option>
+          <option value="link">Generic Link</option>
+        </select>
+      </label>
+      <label class="field" id="btn-emoji-field" hidden><span>Emoji</span><input type="text" id="btn-emoji" maxlength="4" value="🔗" /></label>
+      <label class="field" id="btn-icon-field" hidden>
+        <span>Icon Name (Lucide)</span>
+        <input type="text" id="btn-icon-name" placeholder="e.g. youtube, instagram, link" />
+      </label>
+      <label class="field">
+        <span>Side Accent Color</span>
+        <input type="color" id="btn-side-color" value="#c9a227" />
+      </label>
+      <label class="switch-row"><span>Show Side Color</span><input type="checkbox" id="btn-side-enabled" checked /></label>
+      <label class="switch-row"><span>Enabled</span><input type="checkbox" id="btn-enabled" checked /></label>
+      <label class="switch-row"><span>Featured</span><input type="checkbox" id="btn-featured" /></label>
+      <div class="modal-actions">
+        <button type="button" id="btn-save" class="btn primary">Save</button>
+        <button type="button" id="btn-cancel" class="btn ghost">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
